@@ -1,0 +1,35 @@
+import os
+print("\t------------------------------------------------------------")
+print("\t\tLogical Volume Management")
+print("\t------------------------------------------------------------")
+print("""1.Create a Physical Volume
+         2.Create a Volume Group 
+         3.Create a Logical Volume 
+         4.Extend the Storage Capacity of Data Node by 4GB 
+         5.Reduce the Storage Capacity by 2GB
+         6.EXIT
+    """)
+while True:
+    n=int(input("Select Option from 1 to 5: "))
+    if n==1:
+        os.system("pvcreate /dev/sdc")
+        os.system("pvcreate /dev/sdb")
+        print("Physical Volume  Created!!")
+    elif n==2:
+        os.system("vgcreate hadoopvg /dev/sdb /dev/sdc")
+        print("Volume Group Created!!")
+    elif n==3:
+        os.system("lvcreate --size 16 --name hadooplv hadoopvg")
+        os.system("mkfs.ext4 /dev/hadoopvg/hadooplv")
+        os.system("mkdir hadoopdrive")
+        os.system("mount /dev/hadoopvg/hadooplv /datanode2")
+    elif n==4:
+        os.system("lvextend --size +4G /dev/hadoopvg/hadooplv")
+        os.system("resize2fs /dev/hadoopSto/hadoopLV")
+    elif n==5:
+        os.system("umount /datanode2")
+        os.system("e2fsck /dev/hadoopvg/hadooplv 12G")
+        os.system("lvreduce --size -2G /dev/hadoopvg/hadooplv")
+        os.system("resize2fs /dev/hadoopvg/hadooplv")         
+    else:
+        break
